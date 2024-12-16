@@ -1,0 +1,13 @@
+{
+    "channels": {
+      "survey_announcements": "1300902412550144070",
+      "survey_public_results": "1302532299111268422",
+      "survey_waiting_approval": "1302512414675439656",
+      "votes_waiting_approval": "1302512414675439656",
+      "error_log": "1301616270017429504"
+    },
+    "roles": {
+      "admin": "1300887298954760255"
+    },
+    "main_guild":"1247586830388301915"
+}

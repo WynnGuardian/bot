@@ -1,0 +1,25 @@
+{
+    "status": {
+      "open": {
+        "color": 65352,
+        "icon": "https://media.discordapp.net/attachments/1299606179126837350/1312647868963881000/prism_scaled_8x_pngcrushed_2.png?ex=674d4217&is=674bf097&hm=c326e5182c799642b41fc8630d328cbebc8bdcb4147f8b35e44b7cd4cf227e20&=&format=webp&quality=lossless&width=250&height=250",
+        "message": "```diff\n+ OPEN\n```"
+      },
+      "denied": {
+        "color": 12845066,
+        "icon": "https://cdn.discordapp.com/attachments/1299606179126837350/1312651350676344923/prism_scaled_8x_pngcrushed_3.png?ex=674d4555&is=674bf3d5&hm=910a11ad37d56fb14e01d110c4b225c000929dffbc4a618d8140d2b21eadfb7f&",
+        "message": "```diff\n- DENIED\n```"
+      },
+      "waiting": {
+        "color": 12845066,
+        "icon": "https://cdn.discordapp.com/attachments/1299606179126837350/1312671551711350846/prism_scaled_8x_pngcrushed_5.png?ex=674d5826&is=674c06a6&hm=8fdcfa9ed82e0464716996c8776bb8c2ecbd0d4b271ae197898fa24012794c32&",
+        "message": "```fix\nWAITING APPOVAL\n```"
+      },
+      "approved": {
+        "color": 23039,
+        "icon": "https://media.discordapp.net/attachments/1299606179126837350/1312671407108521994/prism_scaled_8x_pngcrushed_4.png?ex=674d5803&is=674c0683&hm=81b7087b9bef41119d651f6c3e09bcbae2d450cccd65c8a990d05c0515f50958&=&format=webp&quality=lossless&width=250&height=250",
+        "message": "```asciidoc\n= APPROVED\n```"
+      }
+    },
+    "min_votes": 3
+}
