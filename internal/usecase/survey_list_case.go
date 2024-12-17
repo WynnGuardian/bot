@@ -60,14 +60,30 @@ func (u *SurveyListCase) Execute(input api.SurveyListInput, first bool) {
 	}
 	api.MustCallAndUnwrap(api.GetSurveyAPI().FindSurveys, in, func(t *[]entity.Survey) {
 		if input.MessageID == nil {
-			msg, err := u.session.ChannelMessageSendEmbed(*input.ChannelID, embed.GetSurveyListEmbed(*t))
+
+			err := u.session.InteractionRespond(u.interaction.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseDeferredChannelMessageWithSource,
+			})
+
 			if err != nil {
 				response.ErrorResponse(err, true, u.session, u.interaction)
 				return
 			}
+
+			msg, err := u.session.FollowupMessageCreate(u.interaction.Interaction, true, &discordgo.WebhookParams{
+				Content: "Listing surveys:",
+			})
+			if err != nil {
+				response.ErrorResponse(err, true, u.session, u.interaction)
+				return
+			}
+
+			channelId := msg.ChannelID
+			msgId := msg.ID
+			fmt.Println(msgId)
 			edited := &discordgo.MessageEdit{
-				Channel: msg.ChannelID,
-				ID:      msg.ID,
+				Channel: channelId,
+				ID:      msgId,
 				Embeds:  &[]*discordgo.MessageEmbed{embed.GetSurveyListEmbed(*t)},
 				Components: &[]discordgo.MessageComponent{
 					discordgo.ActionsRow{
@@ -75,31 +91,32 @@ func (u *SurveyListCase) Execute(input api.SurveyListInput, first bool) {
 							discordgo.Button{
 								Label:    "Previous",
 								Style:    discordgo.PrimaryButton,
-								CustomID: fmt.Sprintf("previouspage_%s_%s", msg.ID, msg.ChannelID),
+								CustomID: fmt.Sprintf("previouspage_%s_%s", msgId, channelId),
 							},
 							discordgo.Button{
 								Label:    "Next",
 								Style:    discordgo.PrimaryButton,
-								CustomID: fmt.Sprintf("nextpage_%s_%s", msg.ID, msg.ChannelID),
+								CustomID: fmt.Sprintf("nextpage_%s_%s", msgId, channelId),
 							},
 						},
 					},
 				},
 			}
+
 			_, err = u.session.ChannelMessageEditComplex(edited)
 			if err != nil {
 				log.Println("Erro ao editar a mensagem com botão:", err)
 				return
 			}
-			surveyListPageControl.Store(msg.ID, int8(page))
-			u.session.InteractionRespond(u.interaction.Interaction, &discordgo.InteractionResponse{
-				Type: discordgo.InteractionResponseDeferredMessageUpdate,
-			})
+
+			surveyListPageControl.Store(msgId, int8(page))
+
 			return
 		}
 		_, err := u.session.ChannelMessageEditEmbed(*input.ChannelID, *input.MessageID, embed.GetSurveyListEmbed(*t))
 		if err != nil {
 			response.ErrorResponse(err, true, u.session, u.interaction)
+			return
 		}
 		surveyListPageControl.Store(*input.MessageID, int8(page))
 		u.session.InteractionRespond(u.interaction.Interaction, &discordgo.InteractionResponse{

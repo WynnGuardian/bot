@@ -71,11 +71,11 @@ func Load() {
 		panic(err)
 	}
 
-	mustReadAndAssign(pwd, "config/embed/survey_embeds", MainConfig.SurveyEmbeds)
-	mustReadAndAssign(pwd, "config/private.json", MainConfig.Private)
-	mustReadAndAssign(pwd, "config/hosts.json", MainConfig.Hosts)
-	mustReadAndAssign(pwd, "config/discord.json", MainConfig.Discord)
-	mustReadAndAssign(pwd, "config/server.json", MainConfig.Server)
+	mustReadAndAssign(pwd, "config/embed/survey_embeds.json", &MainConfig.SurveyEmbeds)
+	mustReadAndAssign(pwd, "config/private.json", &MainConfig.Private)
+	mustReadAndAssign(pwd, "config/hosts.json", &MainConfig.Hosts)
+	mustReadAndAssign(pwd, "config/discord.json", &MainConfig.Discord)
+	mustReadAndAssign(pwd, "config/server.json", &MainConfig.Server)
 }
 
 func mustReadAndAssign(pwd, relativeDir string, target interface{}) {

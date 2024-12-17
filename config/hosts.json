@@ -1,4 +1,4 @@
 {
-	"items": "http://ms-items:8085",
-  "surveys": "https://ms-surveys:8086"
+	"items": "http://msitems:8085",
+  "surveys": "http://mssurveys:8086"
 }

@@ -16,6 +16,7 @@ func Init() {
 	if err != nil {
 		panic(err.Error())
 	}
+	discord.Identify.Intents = discordgo.IntentsGuilds | discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates | discordgo.IntentGuildMessages | discordgo.IntentMessageContent | discordgo.IntentsGuildMessages
 	Discord = discord
 
 	discord.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
