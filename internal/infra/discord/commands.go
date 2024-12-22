@@ -162,5 +162,37 @@ var (
 				},
 			},
 		},
+		{
+			Name:        "rank",
+			Description: "Rank commands",
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Name:        "update",
+					Description: "Update an item rank",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "item-name",
+							Description: "Target item",
+							Required:    true,
+						},
+					},
+				},
+				{
+					Name:        "view",
+					Description: "View an item rank",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "item-name",
+							Description: "Target item",
+							Required:    true,
+						},
+					},
+				},
+			},
+		},
 	}
 )

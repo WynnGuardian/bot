@@ -30,7 +30,7 @@ func (u *ConfirmVoteUsecase) Execute(input api.ConfirmVoteUsecaseInput) {
 			response.ErrorResponse(err, true, u.session, u.interaction)
 			return
 		}
-		err = util.MessageUser(u.session, input.UserID, embed.GetVoteConfirmedEmbed(t.Survey.ID, t.Survey.ItemName))
+		err = util.MessageUser(u.session, input.UserID, embed.GetVoteConfirmedMessage(t.Survey.ID, t.Survey.ItemName))
 		if err != nil {
 			response.ErrorResponse(err, true, u.session, u.interaction)
 			return

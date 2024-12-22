@@ -41,29 +41,51 @@ func GetSurveyAnnounceEmbed(survey *entity.Survey) *discordgo.MessageEmbed {
 	}
 }
 
-func GetVoteCreateEmbed(url, item string) *discordgo.MessageEmbed {
-	return &discordgo.MessageEmbed{
-		Title:       fmt.Sprintf("Click below to fill %s survey", item),
-		Description: fmt.Sprintf("[Vote URL](%s)", url),
-		Color:       0xb700ff,
+func GetVoteCreateMessage(url, item string) *discordgo.MessageSend {
+	return &discordgo.MessageSend{
+		Embeds: []*discordgo.MessageEmbed{
+			{
+				Title: fmt.Sprintf("Click the button to fill the ``%s`` survey", item),
+				Color: 0xb700ff,
+				Image: &discordgo.MessageEmbedImage{
+					URL:    "http://198.7.123.203/weapons/dagger.water2.webp",
+					Width:  300,
+					Height: 300,
+				},
+			},
+		},
+		Components: []discordgo.MessageComponent{
+			discordgo.ActionsRow{
+				Components: []discordgo.MessageComponent{
+					discordgo.Button{
+						Label: "Vote",
+						Style: discordgo.LinkButton,
+						URL:   url,
+					},
+				},
+			},
+		},
 	}
 }
 
-func GetVoteConfirmedEmbed(survey, item string) *discordgo.MessageEmbed {
-
-	return &discordgo.MessageEmbed{
-		Title: "Your vote was contabilized!",
-		Color: 0xb700ff,
-		Fields: []*discordgo.MessageEmbedField{
+func GetVoteConfirmedMessage(survey, item string) *discordgo.MessageSend {
+	return &discordgo.MessageSend{
+		Embeds: []*discordgo.MessageEmbed{
 			{
-				Name:   "Item",
-				Value:  item,
-				Inline: false,
-			},
-			{
-				Name:   "Survey",
-				Value:  survey,
-				Inline: true,
+				Title: "Your vote was contabilized!",
+				Color: 0xb700ff,
+				Fields: []*discordgo.MessageEmbedField{
+					{
+						Name:   "Item",
+						Value:  item,
+						Inline: false,
+					},
+					{
+						Name:   "Survey",
+						Value:  survey,
+						Inline: true,
+					},
+				},
 			},
 		},
 	}

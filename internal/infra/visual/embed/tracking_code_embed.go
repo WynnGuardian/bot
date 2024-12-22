@@ -35,7 +35,7 @@ func GetTrackingCodeSuccessEmbed(trackingCode string, userMsgErr error) *discord
 	}
 }
 
-func GetTrackingCodeDMEmbed(resp api.AuthenticateItemResponse) *discordgo.MessageEmbed {
+func GetTrackingCodeDMMessage(resp api.AuthenticateItemResponse) *discordgo.MessageSend {
 
 	length := 0
 	for k := range resp.Item.Stats {
@@ -55,20 +55,24 @@ func GetTrackingCodeDMEmbed(resp api.AuthenticateItemResponse) *discordgo.Messag
 			"%d", val), 10), util.PadText(fmt.Sprintf("%.1f", pct), 7)))
 	}
 
-	return &discordgo.MessageEmbed{
-		Title:       "Your item has been authenticated!",
-		Description: "You can now track it's rank with /item track <tracking-code>",
-		Color:       0xb700ff,
-		Fields: []*discordgo.MessageEmbedField{
+	return &discordgo.MessageSend{
+		Embeds: []*discordgo.MessageEmbed{
 			{
-				Name:   "Tracking code",
-				Value:  fmt.Sprintf("``%s``", resp.TrackingCode),
-				Inline: false,
-			},
-			{
-				Name:   resp.Item.Item,
-				Value:  strings.Join(table[:], "\n"),
-				Inline: false,
+				Title:       "Your item has been authenticated!",
+				Description: "You can now track it's rank with /item track <tracking-code>",
+				Color:       0xb700ff,
+				Fields: []*discordgo.MessageEmbedField{
+					{
+						Name:   "Tracking code",
+						Value:  fmt.Sprintf("``%s``", resp.TrackingCode),
+						Inline: false,
+					},
+					{
+						Name:   resp.Item.Item,
+						Value:  strings.Join(table[:], "\n"),
+						Inline: false,
+					},
+				},
 			},
 		},
 	}

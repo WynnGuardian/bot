@@ -25,13 +25,16 @@ func NewStartVotingUsecase(s *discordgo.Session, i *discordgo.InteractionCreate)
 }
 
 func (u *StartVotingUsecase) Execute(input api.StartVotingUsecase) {
+	fmt.Println(11)
 	api.MustCallAndUnwrap(api.GetSurveyAPI().StartVoting, input, func(t *entity.SurveyVote) {
 		url := fmt.Sprintf("http://localhost:5173/#/vote/%s?token=%s", t.Survey.ID, t.Token)
-		err := util.MessageUser(u.session, u.interaction.Member.User.ID, embed.GetVoteCreateEmbed(url, input.Item))
+		fmt.Println(12)
+		err := util.MessageUser(u.session, u.interaction.Member.User.ID, embed.GetVoteCreateMessage(url, input.Item))
 		if err != nil {
+			fmt.Println(err.Error())
 			response.ErrorResponse(err, true, u.session, u.interaction)
 			return
 		}
-		response.WithMessage("Check DM to proceed.", u.session, u.interaction)
+		response.WithMessage("A voting URL attached to your voting token has been sent in your direct messages.", u.session, u.interaction)
 	}, cerrors.CatchAndLogInternal(u.session, u.interaction), cerrors.CatchAndLogAPIError[entity.SurveyVote](u.session, u.interaction))
 }

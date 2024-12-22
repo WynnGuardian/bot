@@ -25,7 +25,7 @@ func NewItemAuthUsecase(s *discordgo.Session, i *discordgo.InteractionCreate) *I
 
 func (u *ItemAuthUsecase) Execute(input api.AuthenticateItemInput) {
 	api.MustCallAndUnwrap(api.GetItemAPI().AuthenticateItem, input, func(t *api.AuthenticateItemResponse) {
-		err := util.MessageUser(u.session, input.DCOwnerUID, embed.GetTrackingCodeDMEmbed(*t))
+		err := util.MessageUser(u.session, input.DCOwnerUID, embed.GetTrackingCodeDMMessage(*t))
 		if err != nil {
 			response.ErrorResponse(err, true, u.session, u.interaction)
 			return

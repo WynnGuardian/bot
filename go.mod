@@ -5,7 +5,6 @@ go 1.23.1
 require (
 	github.com/bwmarrin/discordgo v0.28.1
 	github.com/gin-gonic/gin v1.10.0
-	github.com/joho/godotenv v1.5.1
 	github.com/victorbetoni/go-streams v1.0.2
 )
 
@@ -35,7 +34,7 @@ require (
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
-	github.com/wynnguardian/common v1.1.3
+	github.com/wynnguardian/common v1.1.5
 	golang.org/x/arch v0.11.0 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/net v0.30.0 // indirect

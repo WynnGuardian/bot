@@ -11,6 +11,30 @@ import (
 
 var (
 	commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
+		"rank": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			options := i.ApplicationCommandData().Options
+			switch options[0].Name {
+
+			case "update":
+				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+					uc := usecase.NewRankUpdateCase(s, i)
+					go uc.Execute(api.RankUpdateCaseInput{
+						ItemName: options[0].Options[0].StringValue(),
+					})
+				}))(s, i)
+
+			case "view":
+				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+					uc := usecase.NewRankViewCase(s, i)
+					go uc.Execute(api.RankListCaseInput{
+						ItemName:  options[0].Options[0].StringValue(),
+						MessageID: nil,
+						ChannelID: &i.ChannelID,
+						Prev:      false,
+					}, true)
+				}))(s, i)
+			}
+		},
 		"item": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			options := i.ApplicationCommandData().Options
 			switch options[0].Name {
@@ -32,6 +56,16 @@ var (
 					})
 				}))(s, i)
 
+			case "rank":
+				MustBeMainGuild(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+					uc := usecase.NewRankViewCase(s, i)
+					go uc.Execute(api.RankListCaseInput{
+						ItemName:  options[0].Options[0].StringValue(),
+						MessageID: nil,
+						ChannelID: &i.ChannelID,
+						Prev:      false,
+					}, true)
+				})(s, i)
 			}
 		},
 

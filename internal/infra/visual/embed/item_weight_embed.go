@@ -22,7 +22,7 @@ func GetItemWeightEmbed(resp *api.WeightResponse) *discordgo.MessageEmbed {
 	mask := "``%s | %s | %s | %s | %s``\n"
 
 	table += fmt.Sprintf(mask, idTitle, valueTitle, percentTitle, criteriaTitle, weightedTitle)
-	table += "``" + strings.Repeat("-", len(table)) + "``"
+	table += "``" + strings.Repeat("-", len(table)) + "``\n"
 
 	for id, criteria := range resp.Criteria.Modifiers {
 		item := resp.StaticItem

@@ -90,3 +90,20 @@ type SurveyApproveCaseInput struct {
 type SurveyDiscardCaseInput struct {
 	SurveyID string `json:"survey_id"`
 }
+
+type RankUpdateCaseInput struct {
+	ItemName string `json:"item_name"`
+}
+
+type RankListCaseInput struct {
+	ItemName  string  `json:"item_name"`
+	MessageID *string `json:"message_id"`
+	ChannelID *string `json:"channel_id"`
+	Prev      bool    `json:"previous"`
+}
+
+type FindRankInput struct {
+	ItemName string `json:"item_name"`
+	Page     int    `json:"page"`
+	Limit    int    `json:"limit"`
+}

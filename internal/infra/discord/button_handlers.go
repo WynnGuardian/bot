@@ -46,6 +46,30 @@ var (
 					Prev:      true,
 				}, false)
 			}
+
+			if data[0] == "rankpreviouspage" {
+				if len(data) < 3 {
+					return
+				}
+				vote := usecase.NewSurveyListCase(s, i)
+				vote.Execute(api.SurveyListInput{
+					MessageID: &data[1],
+					ChannelID: &data[2],
+					Prev:      true,
+				}, false)
+			}
+
+			if data[0] == "ranknextpage" {
+				if len(data) < 3 {
+					return
+				}
+				vote := usecase.NewSurveyListCase(s, i)
+				vote.Execute(api.SurveyListInput{
+					MessageID: &data[1],
+					ChannelID: &data[2],
+					Prev:      false,
+				}, false)
+			}
 		}
 	}
 )

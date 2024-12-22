@@ -11,6 +11,8 @@ type ItemsAPI interface {
 	WeightItem(input WeightItemInput) (*APIResponse[WeightResponse], error)
 	AuthenticateItem(input AuthenticateItemInput) (*APIResponse[AuthenticateItemResponse], error)
 	FindCriteria(input FindCriteriaInput) (*APIResponse[entity.ItemCriteria], error)
+	RankUpdate(input RankUpdateCaseInput) (*APIResponse[any], error)
+	GetRank(input FindRankInput) (*APIResponse[[]entity.AuthenticatedItem], error)
 }
 
 type ItemsAPIImpl struct {
@@ -34,4 +36,12 @@ func (a *ItemsAPIImpl) AuthenticateItem(input AuthenticateItemInput) (*APIRespon
 
 func (a *ItemsAPIImpl) FindCriteria(input FindCriteriaInput) (*APIResponse[entity.ItemCriteria], error) {
 	return NewCall[FindCriteriaInput, entity.ItemCriteria](a.CallData(), "findCriteria", input).Post()
+}
+
+func (a *ItemsAPIImpl) RankUpdate(input RankUpdateCaseInput) (*APIResponse[any], error) {
+	return NewCall[RankUpdateCaseInput, any](a.CallData(), "rankUpdate", input).Post()
+}
+
+func (a *ItemsAPIImpl) GetRank(input FindRankInput) (*APIResponse[[]entity.AuthenticatedItem], error) {
+	return NewCall[FindRankInput, []entity.AuthenticatedItem](a.CallData(), "getRank", input).Post()
 }

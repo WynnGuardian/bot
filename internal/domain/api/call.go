@@ -32,12 +32,10 @@ func (c *apiCall[T, U]) encodeBody() ([]byte, error) {
 }
 
 func (c *apiCall[T, U]) Post() (*APIResponse[U], error) {
-
 	encoded, err := c.encodeBody()
 	if err != nil {
 		return nil, err
 	}
-
 	r, err := http.NewRequest("POST", c.endpoint, bytes.NewBuffer(encoded))
 	if err != nil {
 		return nil, err
