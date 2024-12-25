@@ -15,7 +15,7 @@ var (
 				},
 				{
 					Name:        "open",
-					Description: "Open a new criteria survey",
+					Description: "*(ADMIN ONLY)* Open a new criteria survey",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
@@ -34,7 +34,7 @@ var (
 				},
 				{
 					Name:        "approve",
-					Description: "Approve an currently open survey",
+					Description: "*(ADMIN ONLY)* Approve a currently open survey",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
@@ -47,7 +47,7 @@ var (
 				},
 				{
 					Name:        "discard",
-					Description: "Discard an currently waiting approval survey",
+					Description: "*(ADMIN ONLY)* Discard a currently waiting approval survey.",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
@@ -60,7 +60,7 @@ var (
 				},
 				{
 					Name:        "close",
-					Description: "Close a survey",
+					Description: "*(ADMIN ONLY)* Close a currently open survey, so it can receive no more votes.",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
@@ -73,7 +73,7 @@ var (
 				},
 				{
 					Name:        "cancel",
-					Description: "Cancel a survey",
+					Description: "*(ADMIN ONLY)* Cancel a currently open survey",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
@@ -131,7 +131,7 @@ var (
 				},
 				{
 					Name:        "authenticate",
-					Description: "Authenticate player item",
+					Description: "*(ADMIN ONLY)* Authenticate the item and make it trackable/rankable.",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
@@ -168,7 +168,7 @@ var (
 			Options: []*discordgo.ApplicationCommandOption{
 				{
 					Name:        "update",
-					Description: "Update an item rank",
+					Description: "*(ADMIN ONLY)* Force update an item rank",
 					Type:        discordgo.ApplicationCommandOptionSubCommand,
 					Options: []*discordgo.ApplicationCommandOption{
 						{
@@ -188,6 +188,88 @@ var (
 							Type:        discordgo.ApplicationCommandOptionString,
 							Name:        "item-name",
 							Description: "Target item",
+							Required:    true,
+						},
+					},
+				},
+			},
+		},
+		{
+			Name:        "criteria",
+			Description: "Criteria commands",
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Name:        "create",
+					Description: "*(ADMIN ONLY)* Create a criteria for an item",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "item-name",
+							Description: "Target item",
+							Required:    true,
+						},
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "id-name",
+							Description: "ID Name",
+							Required:    true,
+						},
+					},
+				},
+				{
+					Name:        "delete",
+					Description: "*(ADMIN ONLY)* Delete item criteria",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "item-name",
+							Description: "Target item",
+							Required:    true,
+						},
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "id-name",
+							Description: "ID name",
+							Required:    true,
+						},
+					},
+				},
+				{
+					Name:        "view",
+					Description: "View item criteria",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "item-name",
+							Description: "Target item",
+							Required:    true,
+						},
+					},
+				},
+				{
+					Name:        "update",
+					Description: "Update item criteria",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "item-name",
+							Description: "Target item",
+							Required:    true,
+						},
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "criteria-id",
+							Description: "Stat id",
+							Required:    true,
+						},
+						{
+							Type:        discordgo.ApplicationCommandOptionInteger,
+							Name:        "value",
+							Description: "Value",
 							Required:    true,
 						},
 					},

@@ -26,6 +26,15 @@ func NewSurveyApproveCase(s *discordgo.Session, i *discordgo.InteractionCreate) 
 func (u *SurveyApproveCase) Execute(input api.SurveyApproveCaseInput) {
 	api.MustCallAndUnwrap(api.GetSurveyAPI().ApproveSurvey, input, func(t *entity.Survey) {
 		response.WithMessage("Survey approved successfully!", u.session, u.interaction)
-		u.session.ChannelMessageEditEmbeds(config.MainConfig.Discord.Channels.SurveyPublicResults, t.AnnouncementMessageID, []*discordgo.MessageEmbed{embed.GetSurveyAnnounceEmbed(t)})
+
+		msg := embed.GetSurveyAnnounceMessage(t)
+		edit := &discordgo.MessageEdit{
+			ID:         t.AnnouncementMessageID,
+			Channel:    config.MainConfig.Discord.Channels.SurveyPublicResults,
+			Components: &msg.Components,
+			Embeds:     &msg.Embeds,
+		}
+
+		u.session.ChannelMessageEditComplex(edit)
 	}, cerrors.CatchAndLogInternal(u.session, u.interaction), cerrors.CatchAndLogAPIError[entity.Survey](u.session, u.interaction))
 }

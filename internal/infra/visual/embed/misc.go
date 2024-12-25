@@ -10,7 +10,7 @@ import (
 	"github.com/wynnguardian/common/entity"
 )
 
-func GetSurveyAnnounceEmbed(survey *entity.Survey) *discordgo.MessageEmbed {
+func GetSurveyAnnounceMessage(survey *entity.Survey) *discordgo.MessageSend {
 
 	var status config.SurveyStatusConfig
 	switch survey.Status {
@@ -24,21 +24,41 @@ func GetSurveyAnnounceEmbed(survey *entity.Survey) *discordgo.MessageEmbed {
 		status = config.MainConfig.SurveyEmbeds.StatusConfig.Open
 	}
 
-	return &discordgo.MessageEmbed{
-		Title:       fmt.Sprintf("Criteria Survey: %s", survey.ItemName),
-		Description: fmt.Sprintf("Survey ends <t:%d:R>\nYou can fill it by typing ``/survey fill %s`` or clicking the button bellow.", survey.Deadline.Unix(), survey.ItemName),
-		Fields: []*discordgo.MessageEmbedField{
+	msg := &discordgo.MessageSend{
+		Embeds: []*discordgo.MessageEmbed{
 			{
-				Name:   "Status",
-				Value:  status.Message,
-				Inline: true,
+				Title:       fmt.Sprintf("Criteria Survey: %s", survey.ItemName),
+				Description: fmt.Sprintf("Survey ends <t:%d:R>\nYou can fill it by typing ``/survey fill %s`` or clicking the button bellow.", survey.Deadline.Unix(), survey.ItemName),
+				Fields: []*discordgo.MessageEmbedField{
+					{
+						Name:   "Status",
+						Value:  status.Message,
+						Inline: true,
+					},
+				},
+				Color: int(status.Color),
+				Thumbnail: &discordgo.MessageEmbedThumbnail{
+					URL: status.Icon,
+				},
 			},
 		},
-		Color: int(status.Color),
-		Thumbnail: &discordgo.MessageEmbedThumbnail{
-			URL: status.Icon,
-		},
 	}
+
+	if survey.Status == enums.SURVEY_OPEN {
+		msg.Components = []discordgo.MessageComponent{
+			discordgo.ActionsRow{
+				Components: []discordgo.MessageComponent{
+					discordgo.Button{
+						CustomID: fmt.Sprintf("surveyfill_%s", survey.ItemName),
+						Label:    "Vote",
+						Style:    discordgo.PrimaryButton,
+					},
+				},
+			},
+		}
+	}
+
+	return msg
 }
 
 func GetVoteCreateMessage(url, item string) *discordgo.MessageSend {

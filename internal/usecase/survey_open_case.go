@@ -27,7 +27,9 @@ func NewSurveyOpenUsecase(s *discordgo.Session, i *discordgo.InteractionCreate) 
 func (u *SurveyOpenUsecase) Execute(input api.OpenSurveyInput) {
 	api.MustCallAndUnwrap(api.GetSurveyAPI().OpenSurvey, input, func(t *entity.Survey) {
 
-		announce, err := u.session.ChannelMessageSendEmbed(config.MainConfig.Discord.Channels.SurveyPublicResults, embed.GetSurveyAnnounceEmbed(t))
+		msg := embed.GetSurveyAnnounceMessage(t)
+
+		announce, err := u.session.ChannelMessageSendComplex(config.MainConfig.Discord.Channels.SurveyAnnouncements, msg)
 		if err != nil {
 			err = fmt.Errorf("error while creating announcement message: %s", err.Error())
 			response.ErrorResponse(err, true, u.session, u.interaction)

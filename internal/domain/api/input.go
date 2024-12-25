@@ -36,7 +36,7 @@ type AuthenticateItemInput struct {
 }
 
 type FindCriteriaInput struct {
-	Item string `json:"item_utf16"`
+	ItemName string `json:"item_name"`
 }
 
 type ItemUTF16Input struct {
@@ -106,4 +106,25 @@ type FindRankInput struct {
 	ItemName string `json:"item_name"`
 	Page     int    `json:"page"`
 	Limit    int    `json:"limit"`
+}
+
+type CreateCriteriaInput struct {
+	ItemName   string  `json:"item_name"`
+	Default    float64 `json:"default"`
+	CriteriaId string  `json:"criteria_id"`
+}
+
+type DeleteCriteriaInput struct {
+	ItemName   string `json:"item_name"`
+	CriteriaId string `json:"criteria_id"`
+}
+
+type FindCriteriaByNameInput struct {
+	ItemName string `json:"item_name"`
+}
+
+type UpdateCriteriaInput struct {
+	ItemName   string `json:"item_name"`
+	CriteriaId string `json:"criteria_id"`
+	Value      int    `json:"value"`
 }

@@ -26,7 +26,17 @@ func NewSurveyDiscardUsecase(s *discordgo.Session, i *discordgo.InteractionCreat
 func (u *SurveyDiscardUsecase) Execute(input api.SurveyDiscardCaseInput) {
 	s, i := u.session, u.interaction
 	api.MustCallAndUnwrap(api.GetSurveyAPI().DiscardSurvey, input, func(t *entity.Survey) {
-		s.ChannelMessageEditEmbeds(config.MainConfig.Discord.Channels.SurveyPublicResults, t.AnnouncementMessageID, []*discordgo.MessageEmbed{embed.GetSurveyAnnounceEmbed(t)})
 		response.WithMessage("Survey closed successfully!", s, i)
+
+		msg := embed.GetSurveyAnnounceMessage(t)
+		edit := discordgo.MessageEdit{
+			ID:         t.AnnouncementMessageID,
+			Channel:    config.MainConfig.Discord.Channels.SurveyPublicResults,
+			Components: &msg.Components,
+			Embeds:     &msg.Embeds,
+		}
+
+		u.session.ChannelMessageEditComplex(&edit)
+
 	}, cerrors.CatchAndLogInternal(s, i), cerrors.CatchAndLogAPIError[entity.Survey](s, i))
 }

@@ -11,6 +11,47 @@ import (
 
 var (
 	commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
+		"criteria": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			options := i.ApplicationCommandData().Options
+
+			switch options[0].Name {
+			case "create":
+				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+					uc := usecase.NewCreateCriteriaCase(s, i)
+					go uc.Execute(api.CreateCriteriaInput{
+						ItemName:   options[0].Options[0].StringValue(),
+						CriteriaId: options[0].Options[1].StringValue(),
+						Default:    0,
+					})
+				}))(s, i)
+
+			case "view":
+				uc := usecase.NewViewCriteriaCase(s, i)
+				go uc.Execute(api.FindCriteriaInput{
+					ItemName: options[0].Options[0].StringValue(),
+				})
+
+			case "delete":
+				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+					uc := usecase.NewDeleteCriteriaCase(s, i)
+					go uc.Execute(api.DeleteCriteriaInput{
+						ItemName:   options[0].Options[0].StringValue(),
+						CriteriaId: options[0].Options[1].StringValue(),
+					})
+				}))(s, i)
+
+			case "update":
+				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+					uc := usecase.NewUpdateCriteriaCase(s, i)
+					go uc.Execute(api.UpdateCriteriaInput{
+						Value:      int(options[0].Options[2].IntValue()),
+						ItemName:   options[0].Options[0].StringValue(),
+						CriteriaId: options[0].Options[1].StringValue(),
+					})
+				}))(s, i)
+
+			}
+		},
 		"rank": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			options := i.ApplicationCommandData().Options
 			switch options[0].Name {

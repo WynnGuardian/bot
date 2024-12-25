@@ -84,6 +84,8 @@ github.com/victorbetoni/go-streams v1.0.2 h1:nGeBda3iakCjc8u4YzIZG+4kPHLlxXl0Kxc
 github.com/victorbetoni/go-streams v1.0.2/go.mod h1:zBe7rG+nHnLZZrkZZ1VhhrFPzT6o0wh/Wc5r51NdZsE=
 github.com/wynnguardian/common v1.1.5 h1:pwEsuih+71HnSnzZDeuI1Cz2WZ1tmEJxTvjOYAokga4=
 github.com/wynnguardian/common v1.1.5/go.mod h1:LVir1nKuv9P7MPW1TTp4U0FvaGherNN4NKHenjCmo48=
+github.com/wynnguardian/common v1.1.8 h1:xMAIvY6CXV63Pe+OYNmmFd+TNQr86QRvKHFtisIe2/E=
+github.com/wynnguardian/common v1.1.8/go.mod h1:vRt1Uuffbp9vDCOiDpMhEYFZfLcEnvixNxAKJsTVtlU=
 golang.org/x/arch v0.11.0 h1:KXV8WWKCXm6tRpLirl2szsO5j/oOODwZf4hATmGVNs4=
 golang.org/x/arch v0.11.0/go.mod h1:FEVrYAQjsQXMVJ1nsMoVVXPZg6p2JE2mx8psSWTDQys=
 golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b/go.mod h1:T9bdIzuCu7OtxOm1hfPfRQxPLYneinmdGuTeoZ9dtd4=

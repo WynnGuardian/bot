@@ -3,13 +3,14 @@ package embed
 import (
 	"fmt"
 	"strings"
+	"victo/wynnguardian-bot/internal/domain/config"
 	"victo/wynnguardian-bot/internal/infra/util"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/wynnguardian/common/entity"
 )
 
-func GetRankListMessage(resp []entity.AuthenticatedItem, itemName, msg, channel string, offset, limit int) *discordgo.MessageSend {
+func GetRankListMessage(resp []entity.AuthenticatedItem, itemName, msg, channel string, offset, limit int, session *discordgo.Session) *discordgo.MessageSend {
 
 	mask := "`` %s | %s | %s | %s ``\n"
 	table := ""
@@ -23,14 +24,18 @@ func GetRankListMessage(resp []entity.AuthenticatedItem, itemName, msg, channel 
 	table += fmt.Sprintf("``%s``\n", strings.Repeat("-", len(table)))
 
 	for ind, s := range resp {
-		pos := util.PadText(fmt.Sprintf("%d", ind+offset*limit), 3)
+		pos := util.PadText(fmt.Sprintf("%d", ind+offset*limit+1), 3)
 		weight := util.PadText(fmt.Sprintf("%.2f%%", s.Weight), 6)
 		trackingCode := util.PadText(s.TrackingCode, 16)
 
 		owner := "HIDDEN"
 		if s.PublicOwner {
-			owner = s.OwnerDC
+			user, err := session.GuildMember(config.MainConfig.Discord.MainGuild, s.OwnerDC)
+			if err == nil {
+				owner = user.User.Username
+			}
 		}
+		owner = util.PadText(owner, 37)
 
 		table += fmt.Sprintf(mask, pos, weight, trackingCode, owner)
 	}
@@ -53,16 +58,12 @@ func GetRankListMessage(resp []entity.AuthenticatedItem, itemName, msg, channel 
 			discordgo.ActionsRow{
 				Components: []discordgo.MessageComponent{
 					discordgo.Button{
-						Emoji: &discordgo.ComponentEmoji{
-							ID: "arrow_backward",
-						},
+						Emoji:    &discordgo.ComponentEmoji{Name: "◀"},
 						Style:    discordgo.PrimaryButton,
 						CustomID: fmt.Sprintf("rankpreviouspage_%s_%s", msg, channel),
 					},
 					discordgo.Button{
-						Emoji: &discordgo.ComponentEmoji{
-							ID: "arrow_forward",
-						},
+						Emoji:    &discordgo.ComponentEmoji{Name: "▶"},
 						Style:    discordgo.PrimaryButton,
 						CustomID: fmt.Sprintf("ranknextpage_%s_%s", msg, channel),
 					},

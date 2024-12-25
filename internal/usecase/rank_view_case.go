@@ -1,9 +1,12 @@
 package usecase
 
 import (
+	"log"
 	"sync"
 	"victo/wynnguardian-bot/internal/domain/api"
+	"victo/wynnguardian-bot/internal/domain/response"
 	"victo/wynnguardian-bot/internal/infra/cerrors"
+	"victo/wynnguardian-bot/internal/infra/visual/embed"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/wynnguardian/common/entity"
@@ -56,7 +59,63 @@ func (u *RankViewCase) Execute(input api.RankListCaseInput, first bool) {
 		Page:     int(page),
 	}
 
-	api.MustCallAndUnwrap(api.GetItemAPI().GetRank, in, func(t *[]entity.AuthenticatedItem) {
+	api.MustCallAndUnwrap(
+		api.GetItemAPI().GetRank,
+		in,
+		func(t *[]entity.AuthenticatedItem) {
+			if input.MessageID == nil {
 
-	}, cerrors.CatchAndLogInternal(u.session, u.interaction), cerrors.CatchAndLogAPIError[[]entity.AuthenticatedItem](u.session, u.interaction))
+				err := u.session.InteractionRespond(u.interaction.Interaction, &discordgo.InteractionResponse{
+					Type: discordgo.InteractionResponseDeferredChannelMessageWithSource,
+				})
+
+				if err != nil {
+					response.ErrorResponse(err, true, u.session, u.interaction)
+					return
+				}
+
+				msg, err := u.session.FollowupMessageCreate(u.interaction.Interaction, true, &discordgo.WebhookParams{
+					Content: "Listing rank:",
+				})
+				if err != nil {
+					response.ErrorResponse(err, true, u.session, u.interaction)
+					return
+				}
+
+				channelId := msg.ChannelID
+				msgId := msg.ID
+
+				messageSend := embed.GetRankListMessage(*t, in.ItemName, msgId, channelId, in.Limit, in.Page-1, u.session)
+
+				edited := &discordgo.MessageEdit{
+					Channel:    channelId,
+					ID:         msgId,
+					Embeds:     &messageSend.Embeds,
+					Components: &messageSend.Components,
+				}
+
+				_, err = u.session.ChannelMessageEditComplex(edited)
+				if err != nil {
+					log.Println("Erro ao editar a mensagem com botão:", err)
+					return
+				}
+
+				surveyListPageControl.Store(msgId, int8(page))
+
+				return
+			}
+			_, err := u.session.ChannelMessageEditEmbed(*input.ChannelID, *input.MessageID, embed.GetRankListMessage(*t, in.ItemName, *input.MessageID, *input.ChannelID, in.Limit, in.Page-1, u.session).Embeds[0])
+			if err != nil {
+				response.ErrorResponse(err, true, u.session, u.interaction)
+				return
+			}
+			surveyListPageControl.Store(*input.MessageID, int8(page))
+			u.session.InteractionRespond(u.interaction.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseDeferredMessageUpdate,
+			})
+		},
+		cerrors.CatchAndLogInternal(u.session, u.interaction),
+		cerrors.CatchAndLogAPIError[[]entity.AuthenticatedItem](u.session, u.interaction),
+	)
+
 }

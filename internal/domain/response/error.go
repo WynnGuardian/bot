@@ -8,6 +8,9 @@ import (
 
 func ErrorResponse(err error, internal bool, s *discordgo.Session, i *discordgo.InteractionCreate) error {
 	msg := "Something went wrong. This error was logged and is already being handled."
+	if !internal {
+		msg = err.Error()
+	}
 	return s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{

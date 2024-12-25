@@ -13,6 +13,9 @@ type ItemsAPI interface {
 	FindCriteria(input FindCriteriaInput) (*APIResponse[entity.ItemCriteria], error)
 	RankUpdate(input RankUpdateCaseInput) (*APIResponse[any], error)
 	GetRank(input FindRankInput) (*APIResponse[[]entity.AuthenticatedItem], error)
+	CreateCriteria(input CreateCriteriaInput) (*APIResponse[any], error)
+	DeleteCriteria(input DeleteCriteriaInput) (*APIResponse[any], error)
+	UpdateCriteria(input UpdateCriteriaInput) (*APIResponse[any], error)
 }
 
 type ItemsAPIImpl struct {
@@ -35,7 +38,7 @@ func (a *ItemsAPIImpl) AuthenticateItem(input AuthenticateItemInput) (*APIRespon
 }
 
 func (a *ItemsAPIImpl) FindCriteria(input FindCriteriaInput) (*APIResponse[entity.ItemCriteria], error) {
-	return NewCall[FindCriteriaInput, entity.ItemCriteria](a.CallData(), "findCriteria", input).Post()
+	return NewCall[FindCriteriaInput, entity.ItemCriteria](a.CallData(), "getCriteria", input).Post()
 }
 
 func (a *ItemsAPIImpl) RankUpdate(input RankUpdateCaseInput) (*APIResponse[any], error) {
@@ -44,4 +47,20 @@ func (a *ItemsAPIImpl) RankUpdate(input RankUpdateCaseInput) (*APIResponse[any],
 
 func (a *ItemsAPIImpl) GetRank(input FindRankInput) (*APIResponse[[]entity.AuthenticatedItem], error) {
 	return NewCall[FindRankInput, []entity.AuthenticatedItem](a.CallData(), "getRank", input).Post()
+}
+
+func (a *ItemsAPIImpl) CreateCriteria(input CreateCriteriaInput) (*APIResponse[any], error) {
+	return NewCall[CreateCriteriaInput, any](a.CallData(), "createCriteria", input).Post()
+}
+
+func (a *ItemsAPIImpl) DeleteCriteria(input DeleteCriteriaInput) (*APIResponse[any], error) {
+	return NewCall[DeleteCriteriaInput, any](a.CallData(), "deleteCriteria", input).Post()
+}
+
+func (a *ItemsAPIImpl) GetCriteriaByName(input FindCriteriaByNameInput) (*APIResponse[entity.ItemCriteria], error) {
+	return NewCall[FindCriteriaByNameInput, entity.ItemCriteria](a.CallData(), "getCriteriaByName", input).Post()
+}
+
+func (a *ItemsAPIImpl) UpdateCriteria(input UpdateCriteriaInput) (*APIResponse[any], error) {
+	return NewCall[UpdateCriteriaInput, any](a.CallData(), "updateCriteria", input).Post()
 }

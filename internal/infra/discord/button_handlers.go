@@ -70,6 +70,18 @@ var (
 					Prev:      false,
 				}, false)
 			}
+
+			if data[0] == "surveyfill" {
+				if len(data) < 2 {
+					return
+				}
+
+				uc := usecase.NewStartVotingUsecase(s, i)
+				uc.Execute(api.StartVotingUsecase{
+					Item:   data[1],
+					UserID: i.Member.User.ID,
+				})
+			}
 		}
 	}
 )
