@@ -16,16 +16,15 @@ func GetSurveyListEmbed(resp []entity.Survey) *discordgo.MessageEmbed {
 		return r.ItemName
 	}).ToSlice()
 	textLenght := util.HighestLength(itemNames)
-	mask := "``%s | %s | %s``\n"
+	mask := "``%s | %s | ``%s\n"
 	table := ""
 
 	idTitle := util.PadText("ID", 10)
 	itemTitle := util.PadText("Item", textLenght)
-	endsTitle := util.PadText("End", 16)
+	endsTitle := util.PadText("Deadline", 16)
 
-	table += fmt.Sprintf(mask, idTitle, itemTitle, endsTitle)
+	table += fmt.Sprintf("``%s | %s | %s``\n", idTitle, itemTitle, endsTitle)
 	table += fmt.Sprintf("``%s``\n", strings.Repeat("-", len(table)))
-
 	for _, s := range resp {
 		id := util.PadText(s.ID, 10)
 		item := util.PadText(s.ItemName, textLenght)

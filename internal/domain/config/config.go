@@ -11,7 +11,7 @@ import (
 type SurveyStatusConfig struct {
 	Color   int32  `json:"color"`
 	Icon    string `json:"icon"`
-	Message string `json:"string"`
+	Message string `json:"message"`
 }
 
 type SurveyEmbedsConfig struct {
@@ -48,9 +48,14 @@ type DiscordConfig struct {
 		SurveyWaitingApproval string `json:"survey_waiting_approval"`
 		VotesWaitingApproval  string `json:"votes_waiting_approval"`
 		ErrorLog              string `json:"error_log"`
+		RankUpdates           string `json:"rank_updates"`
 	} `json:"channels"`
 	Roles struct {
-		Admin string `json:"admin"`
+		Moderator     string `json:"moderator"`
+		Manager       string `json:"manager"`
+		Surveys       string `json:"survey"`
+		Ranks         string `json:"rank"`
+		SurveyResults string `json:"survey_result"`
 	} `json:"roles"`
 	MainGuild string `json:"main_guild"`
 }

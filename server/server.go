@@ -1,7 +1,6 @@
 package server
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"victo/wynnguardian-bot/internal/domain/config"
@@ -43,11 +42,6 @@ func parse(hf func(ctx *gin.Context) response.WGResponse) gin.HandlerFunc {
 		if resp.Body == "" {
 			resp.Body = "{}"
 		}
-		b, err := json.Marshal(resp)
-		if err != nil {
-			ctx.AbortWithError(505, err)
-			return
-		}
-		ctx.JSON(200, b)
+		ctx.JSON(resp.Status, gin.H{"status": resp.Status, "message": resp.Message, "body": resp.Body})
 	}
 }

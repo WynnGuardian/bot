@@ -27,8 +27,8 @@ func GetSurveyApprovalEmbed(result *entity.SurveyResult) *discordgo.MessageEmbed
 	}
 
 	return &discordgo.MessageEmbed{
-		Title:       fmt.Sprintf("Item criteria survey ended for item: %s", result.ItemName),
-		Description: fmt.Sprintf("Type ``/survey approve %s`` to approve results.", result.SurveyID),
+		Title:       fmt.Sprintf("Item criteria survey ended for item: %s", result.Survey.ItemName),
+		Description: fmt.Sprintf("Type ``/survey approve %s`` to approve results.", result.Survey.ID),
 		Fields: []*discordgo.MessageEmbedField{
 			{
 				Name:   "Total votes",

@@ -8,9 +8,10 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/wynnguardian/common/entity"
+	"github.com/wynnguardian/common/enums"
 )
 
-func GetVoteEmbed(vote entity.SurveyVote) *discordgo.MessageEmbed {
+func GetVoteMessage(vote entity.SurveyVote) *discordgo.MessageSend {
 
 	textLenght := util.HighestLength(util.KeySlice(vote.Votes))
 	table := ""
@@ -26,25 +27,64 @@ func GetVoteEmbed(vote entity.SurveyVote) *discordgo.MessageEmbed {
 		table += fmt.Sprintf(mask, id, val)
 	}
 
-	return &discordgo.MessageEmbed{
-		Title:       "Vote received",
-		Description: fmt.Sprintf("Confirm with the button below or type ``/survey confirm %s``", vote.Token),
-		Fields: []*discordgo.MessageEmbedField{
+	status := "```fix\nWAITING APPOVAL\n```"
+	if vote.Status == enums.VOTE_CONTABILIZED {
+		status = "```diff\n+ CONTABILIZED\n```"
+	}
+	if vote.Status == enums.VOTE_DENIED {
+		status = "```diff\n- DENIED\n```"
+	}
+
+	msg := &discordgo.MessageSend{
+		Components: []discordgo.MessageComponent{},
+		Embeds: []*discordgo.MessageEmbed{
 			{
-				Name:   "User ID",
-				Value:  fmt.Sprintf("<@%s>", vote.DiscordUserID),
-				Inline: false,
-			},
-			{
-				Name:   "Sent at",
-				Value:  fmt.Sprintf("<t:%d>", time.Now().Unix()),
-				Inline: false,
-			},
-			{
-				Name:   "Votes",
-				Value:  table,
-				Inline: false,
+				Title:       "Vote received",
+				Description: "Confirm or deny the vote using the buttons bellow",
+				Fields: []*discordgo.MessageEmbedField{
+					{
+						Name:   "User ID",
+						Value:  fmt.Sprintf("<@%s>", vote.DiscordUserID),
+						Inline: false,
+					},
+					{
+						Name:   "Sent at",
+						Value:  fmt.Sprintf("<t:%d>", time.Now().Unix()),
+						Inline: false,
+					},
+					{
+						Name:   "Votes",
+						Value:  table,
+						Inline: false,
+					},
+					{
+						Name:   "Status",
+						Value:  status,
+						Inline: false,
+					},
+				},
 			},
 		},
 	}
+
+	if vote.Status == enums.VOTE_NOT_CONFIRMED {
+		msg.Components = []discordgo.MessageComponent{
+			discordgo.ActionsRow{
+				Components: []discordgo.MessageComponent{
+					discordgo.Button{
+						Emoji:    &discordgo.ComponentEmoji{Name: "✅"},
+						Style:    discordgo.PrimaryButton,
+						CustomID: fmt.Sprintf("confirmvote_%s", vote.Token),
+					},
+					discordgo.Button{
+						Emoji:    &discordgo.ComponentEmoji{Name: "❌"},
+						Style:    discordgo.PrimaryButton,
+						CustomID: fmt.Sprintf("denyvote_%s", vote.Token),
+					},
+				},
+			},
+		}
+	}
+
+	return msg
 }

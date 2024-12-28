@@ -15,6 +15,7 @@ func ErrorResponse(err error, internal bool, s *discordgo.Session, i *discordgo.
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
 			Content: fmt.Sprintf("``Error: %s``", msg),
+			Flags:   discordgo.MessageFlagsEphemeral,
 		},
 	})
 }

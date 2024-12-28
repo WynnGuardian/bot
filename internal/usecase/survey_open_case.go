@@ -70,7 +70,7 @@ func (u *SurveyOpenUsecase) Execute(input api.OpenSurveyInput) {
 				return
 			}
 
-			response.WithMessage("Survey opened successfully,", u.session, u.interaction)
+			response.WithMessage("Survey opened successfully!", true, u.session, u.interaction)
 
 		}, cerrors.CatchAndLogInternal(u.session, u.interaction), cerrors.CatchAndLogAPIError[any](u.session, u.interaction))
 

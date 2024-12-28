@@ -97,6 +97,38 @@ var (
 						},
 					},
 				},
+				{
+					Name:        "ban",
+					Description: "(ADMIN ONLY) Ban user from surveys.",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionUser,
+							Name:        "user",
+							Description: "Target user",
+							Required:    true,
+						},
+						{
+							Type:        discordgo.ApplicationCommandOptionString,
+							Name:        "reason",
+							Description: "Reason",
+							Required:    true,
+						},
+					},
+				},
+				{
+					Name:        "unban",
+					Description: "(ADMIN ONLY) Unban user from surveys.",
+					Type:        discordgo.ApplicationCommandOptionSubCommand,
+					Options: []*discordgo.ApplicationCommandOption{
+						{
+							Type:        discordgo.ApplicationCommandOptionUser,
+							Name:        "user",
+							Description: "Target user",
+							Required:    true,
+						},
+					},
+				},
 			},
 		},
 		{
@@ -156,6 +188,12 @@ var (
 							Type:        discordgo.ApplicationCommandOptionBoolean,
 							Name:        "public-owner",
 							Description: "Make item owner public",
+							Required:    true,
+						},
+						{
+							Type:        discordgo.ApplicationCommandOptionBoolean,
+							Name:        "force",
+							Description: "Force authenticate item",
 							Required:    true,
 						},
 					},

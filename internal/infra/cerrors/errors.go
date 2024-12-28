@@ -21,7 +21,7 @@ func CatchAndLogInternal(s *discordgo.Session, i *discordgo.InteractionCreate) f
 func CatchAndLogAPIError[T any](s *discordgo.Session, i *discordgo.InteractionCreate) func(err *api.APIResponse[T]) {
 	return func(err *api.APIResponse[T]) {
 		internal := err.Status == http.StatusInternalServerError
-		if err.Status != 200 && response.ErrorResponse(errors.New(err.Message), internal, s, i) != nil {
+		if err.Status != 200 && !internal && response.ErrorResponse(errors.New(err.Message), internal, s, i) != nil {
 			fmt.Println("Couldn't log error: ", err.Message)
 		}
 	}

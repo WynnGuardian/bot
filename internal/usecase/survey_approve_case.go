@@ -8,7 +8,6 @@ import (
 	"victo/wynnguardian-bot/internal/infra/visual/embed"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/wynnguardian/common/entity"
 )
 
 type SurveyApproveCase struct {
@@ -24,17 +23,20 @@ func NewSurveyApproveCase(s *discordgo.Session, i *discordgo.InteractionCreate) 
 }
 
 func (u *SurveyApproveCase) Execute(input api.SurveyApproveCaseInput) {
-	api.MustCallAndUnwrap(api.GetSurveyAPI().ApproveSurvey, input, func(t *entity.Survey) {
-		response.WithMessage("Survey approved successfully!", u.session, u.interaction)
+	api.MustCallAndUnwrap(api.GetSurveyAPI().ApproveSurvey, input, func(t *api.SurveyApproveResponse) {
+		response.WithMessage("Survey approved successfully!", true, u.session, u.interaction)
 
-		msg := embed.GetSurveyAnnounceMessage(t)
+		msg := embed.GetSurveyAnnounceMessage(&t.Survey)
 		edit := &discordgo.MessageEdit{
-			ID:         t.AnnouncementMessageID,
-			Channel:    config.MainConfig.Discord.Channels.SurveyPublicResults,
+			ID:         t.Survey.AnnouncementMessageID,
+			Channel:    config.MainConfig.Discord.Channels.SurveyAnnouncements,
 			Components: &msg.Components,
 			Embeds:     &msg.Embeds,
 		}
 
 		u.session.ChannelMessageEditComplex(edit)
-	}, cerrors.CatchAndLogInternal(u.session, u.interaction), cerrors.CatchAndLogAPIError[entity.Survey](u.session, u.interaction))
+
+		u.session.ChannelMessageSendComplex(config.MainConfig.Discord.Channels.SurveyPublicResults, embed.GetSurveyResultMessage(&t.Result))
+
+	}, cerrors.CatchAndLogInternal(u.session, u.interaction), cerrors.CatchAndLogAPIError[api.SurveyApproveResponse](u.session, u.interaction))
 }

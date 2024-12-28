@@ -25,6 +25,6 @@ func NewViewCriteriaCase(s *discordgo.Session, i *discordgo.InteractionCreate) *
 func (u *ViewCriteriaCase) Execute(input api.FindCriteriaInput) {
 	api.MustCallAndUnwrap(api.GetItemAPI().FindCriteria, input, func(t *entity.ItemCriteria) {
 		embed := embed.GetItemCriteriaEmbed(t)
-		response.WithEmbed(embed, u.session, u.interaction)
+		response.WithEmbed(embed, false, u.session, u.interaction)
 	}, cerrors.CatchAndLogInternal(u.session, u.interaction), cerrors.CatchAndLogAPIError[entity.ItemCriteria](u.session, u.interaction))
 }

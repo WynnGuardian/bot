@@ -25,11 +25,17 @@ func GetSurveyAnnounceMessage(survey *entity.Survey) *discordgo.MessageSend {
 	}
 
 	msg := &discordgo.MessageSend{
+		Content: fmt.Sprintf("<@&%s>", config.MainConfig.Discord.Roles.Surveys),
 		Embeds: []*discordgo.MessageEmbed{
 			{
 				Title:       fmt.Sprintf("Criteria Survey: %s", survey.ItemName),
 				Description: fmt.Sprintf("Survey ends <t:%d:R>\nYou can fill it by typing ``/survey fill %s`` or clicking the button bellow.", survey.Deadline.Unix(), survey.ItemName),
 				Fields: []*discordgo.MessageEmbedField{
+					{
+						Name:   "ID",
+						Value:  fmt.Sprintf("```%s```", survey.ID),
+						Inline: true,
+					},
 					{
 						Name:   "Status",
 						Value:  status.Message,
@@ -94,6 +100,29 @@ func GetVoteConfirmedMessage(survey, item string) *discordgo.MessageSend {
 			{
 				Title: "Your vote was contabilized!",
 				Color: 0xb700ff,
+				Fields: []*discordgo.MessageEmbedField{
+					{
+						Name:   "Item",
+						Value:  item,
+						Inline: false,
+					},
+					{
+						Name:   "Survey",
+						Value:  survey,
+						Inline: true,
+					},
+				},
+			},
+		},
+	}
+}
+
+func GetVoteDeniedMessage(survey, item string) *discordgo.MessageSend {
+	return &discordgo.MessageSend{
+		Embeds: []*discordgo.MessageEmbed{
+			{
+				Title: "Your vote was denied.",
+				Color: 0xcc0404,
 				Fields: []*discordgo.MessageEmbedField{
 					{
 						Name:   "Item",

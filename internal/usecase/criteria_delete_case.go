@@ -22,6 +22,6 @@ func NewDeleteCriteriaCase(s *discordgo.Session, i *discordgo.InteractionCreate)
 
 func (u *DeleteCriteriaCase) Execute(input api.DeleteCriteriaInput) {
 	api.MustCallAndUnwrap(api.GetItemAPI().DeleteCriteria, input, func(t *any) {
-		response.WithMessage("Criteria deleted successfully!", u.session, u.interaction)
+		response.WithMessage("Criteria deleted successfully!", true, u.session, u.interaction)
 	}, cerrors.CatchAndLogInternal(u.session, u.interaction), cerrors.CatchAndLogAPIError[any](u.session, u.interaction))
 }

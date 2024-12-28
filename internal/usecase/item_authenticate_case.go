@@ -30,6 +30,6 @@ func (u *ItemAuthUsecase) Execute(input api.AuthenticateItemInput) {
 			response.ErrorResponse(err, true, u.session, u.interaction)
 			return
 		}
-		response.WithEmbed(embed.GetTrackingCodeSuccessEmbed(t.TrackingCode, err), u.session, u.interaction)
+		response.WithEmbed(embed.GetTrackingCodeSuccessEmbed(t.TrackingCode, err), false, u.session, u.interaction)
 	}, cerrors.CatchAndLogInternal(u.session, u.interaction), cerrors.CatchAndLogAPIError[api.AuthenticateItemResponse](u.session, u.interaction))
 }

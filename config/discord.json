@@ -2,12 +2,17 @@
     "channels": {
       "survey_announcements": "1300902412550144070",
       "survey_public_results": "1302532299111268422",
-      "survey_waiting_approval": "1302512414675439656",
+      "survey_waiting_approval": "1305343809089179819",
       "votes_waiting_approval": "1302512414675439656",
+      "rank_updates": "1300902312591495168",
       "error_log": "1301616270017429504"
     },
     "roles": {
-      "admin": "1300887298954760255"
+      "manager": "1321673712092844175",
+      "moderator": "1300887298954760255",
+      "ranks": "1322263217195454574",
+      "surveys": "1322263000442343444",
+      "survey_results": "1322313597359226920"
     },
     "main_guild":"1247586830388301915"
 }

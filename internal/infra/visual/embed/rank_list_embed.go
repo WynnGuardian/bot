@@ -60,12 +60,12 @@ func GetRankListMessage(resp []entity.AuthenticatedItem, itemName, msg, channel 
 					discordgo.Button{
 						Emoji:    &discordgo.ComponentEmoji{Name: "◀"},
 						Style:    discordgo.PrimaryButton,
-						CustomID: fmt.Sprintf("rankpreviouspage_%s_%s", msg, channel),
+						CustomID: fmt.Sprintf("rankpreviouspage_%s_%s_%s", msg, channel, itemName),
 					},
 					discordgo.Button{
 						Emoji:    &discordgo.ComponentEmoji{Name: "▶"},
 						Style:    discordgo.PrimaryButton,
-						CustomID: fmt.Sprintf("ranknextpage_%s_%s", msg, channel),
+						CustomID: fmt.Sprintf("ranknextpage_%s_%s_%s", msg, channel, itemName),
 					},
 				},
 			},

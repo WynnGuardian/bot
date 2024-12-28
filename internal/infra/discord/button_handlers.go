@@ -13,16 +13,29 @@ var (
 		if i.Type == discordgo.InteractionMessageComponent {
 			data := strings.Split(i.MessageComponentData().CustomID, "_")
 			if data[0] == "confirmvote" {
-				if len(data) < 3 {
+
+				if len(data) < 2 {
 					return
 				}
-				vote := usecase.NewConfirmVoteUsecase(s, i)
-				vote.Execute(api.ConfirmVoteUsecaseInput{
-					Executer:  i.Member.User.ID,
-					UserID:    data[1],
-					Survey:    data[2],
-					MessageID: i.Message.ID,
-				})
+				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+					vote := usecase.NewConfirmVoteUsecase(s, i)
+					go vote.Execute(api.ConfirmVoteUsecaseInput{
+						Executer:  i.Member.User.ID,
+						Token:     data[1],
+						MessageID: i.Message.ID,
+					})
+				}))(s, i)
+			}
+			if data[0] == "denyvote" {
+				if len(data) < 2 {
+					return
+				}
+				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+					vote := usecase.NewVoteDenyCase(s, i)
+					go vote.Execute(api.DenyVoteInput{
+						Token: data[1],
+					})
+				}))(s, i)
 			}
 			if data[0] == "nextpage" {
 				if len(data) < 3 {
@@ -48,11 +61,12 @@ var (
 			}
 
 			if data[0] == "rankpreviouspage" {
-				if len(data) < 3 {
+				if len(data) < 4 {
 					return
 				}
-				vote := usecase.NewSurveyListCase(s, i)
-				vote.Execute(api.SurveyListInput{
+				vote := usecase.NewRankViewCase(s, i)
+				vote.Execute(api.RankListCaseInput{
+					ItemName:  data[3],
 					MessageID: &data[1],
 					ChannelID: &data[2],
 					Prev:      true,
@@ -63,8 +77,9 @@ var (
 				if len(data) < 3 {
 					return
 				}
-				vote := usecase.NewSurveyListCase(s, i)
-				vote.Execute(api.SurveyListInput{
+				vote := usecase.NewRankViewCase(s, i)
+				vote.Execute(api.RankListCaseInput{
+					ItemName:  data[3],
 					MessageID: &data[1],
 					ChannelID: &data[2],
 					Prev:      false,
@@ -80,7 +95,7 @@ var (
 				uc.Execute(api.StartVotingUsecase{
 					Item:   data[1],
 					UserID: i.Member.User.ID,
-				})
+				}, true)
 			}
 		}
 	}

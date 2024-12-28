@@ -21,7 +21,19 @@ func NewSurveyApprovalCase(s *discordgo.Session) *SurveyApprovalCase {
 }
 
 func (u *SurveyApprovalCase) Execute(input entity.SurveyResult) response.WGResponse {
+
+	msg := embed.GetSurveyAnnounceMessage(input.Survey)
+	edit := &discordgo.MessageEdit{
+		ID:         input.Survey.AnnouncementMessageID,
+		Channel:    config.MainConfig.Discord.Channels.SurveyAnnouncements,
+		Components: &msg.Components,
+		Embeds:     &msg.Embeds,
+	}
+
+	u.s.ChannelMessageEditComplex(edit)
+
 	embed := embed.GetSurveyApprovalEmbed(&input)
+
 	err := util.SendEmbedMessage(u.s, config.MainConfig.Discord.Channels.SurveyWaitingApproval, embed)
 	if err != nil {
 		return response.ErrInternalServerErr(err)

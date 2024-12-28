@@ -23,6 +23,6 @@ func NewItemWeighUsecase(s *discordgo.Session, i *discordgo.InteractionCreate) *
 
 func (u *ItemWeighUsecase) Execute(input api.WeightItemInput) {
 	api.MustCallAndUnwrap(api.GetItemAPI().WeightItem, input, func(t *api.WeightResponse) {
-		response.WithEmbed(embed.GetItemWeightEmbed(t), u.session, u.interaction)
+		response.WithEmbed(embed.GetItemWeightEmbed(t), false, u.session, u.interaction)
 	}, cerrors.CatchAndLogInternal(u.session, u.interaction), cerrors.CatchAndLogAPIError[api.WeightResponse](u.session, u.interaction))
 }

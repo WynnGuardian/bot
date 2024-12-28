@@ -16,7 +16,7 @@ var (
 
 			switch options[0].Name {
 			case "create":
-				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+				MustBeMainGuild(MustBeManager(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					uc := usecase.NewCreateCriteriaCase(s, i)
 					go uc.Execute(api.CreateCriteriaInput{
 						ItemName:   options[0].Options[0].StringValue(),
@@ -32,7 +32,7 @@ var (
 				})
 
 			case "delete":
-				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+				MustBeMainGuild(MustBeManager(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					uc := usecase.NewDeleteCriteriaCase(s, i)
 					go uc.Execute(api.DeleteCriteriaInput{
 						ItemName:   options[0].Options[0].StringValue(),
@@ -41,7 +41,7 @@ var (
 				}))(s, i)
 
 			case "update":
-				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+				MustBeMainGuild(MustBeManager(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					uc := usecase.NewUpdateCriteriaCase(s, i)
 					go uc.Execute(api.UpdateCriteriaInput{
 						Value:      int(options[0].Options[2].IntValue()),
@@ -65,15 +65,13 @@ var (
 				}))(s, i)
 
 			case "view":
-				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-					uc := usecase.NewRankViewCase(s, i)
-					go uc.Execute(api.RankListCaseInput{
-						ItemName:  options[0].Options[0].StringValue(),
-						MessageID: nil,
-						ChannelID: &i.ChannelID,
-						Prev:      false,
-					}, true)
-				}))(s, i)
+				uc := usecase.NewRankViewCase(s, i)
+				go uc.Execute(api.RankListCaseInput{
+					ItemName:  options[0].Options[0].StringValue(),
+					MessageID: nil,
+					ChannelID: &i.ChannelID,
+					Prev:      false,
+				}, true)
 			}
 		},
 		"item": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -94,19 +92,9 @@ var (
 						MCOwnerUID: options[0].Options[1].StringValue(),
 						DCOwnerUID: options[0].Options[2].StringValue(),
 						Public:     options[0].Options[3].BoolValue(),
+						Force:      options[0].Options[4].BoolValue(),
 					})
 				}))(s, i)
-
-			case "rank":
-				MustBeMainGuild(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-					uc := usecase.NewRankViewCase(s, i)
-					go uc.Execute(api.RankListCaseInput{
-						ItemName:  options[0].Options[0].StringValue(),
-						MessageID: nil,
-						ChannelID: &i.ChannelID,
-						Prev:      false,
-					}, true)
-				})(s, i)
 			}
 		},
 
@@ -132,7 +120,7 @@ var (
 				}))(s, i)
 
 			case "approve":
-				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+				MustBeMainGuild(MustBeManager(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					uc := usecase.NewSurveyApproveCase(s, i)
 					go uc.Execute(api.SurveyApproveCaseInput{
 						SurveyID: options[0].Options[0].StringValue(),
@@ -140,7 +128,7 @@ var (
 				}))(s, i)
 
 			case "discard":
-				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+				MustBeMainGuild(MustBeManager(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					uc := usecase.NewSurveyDiscardUsecase(s, i)
 					go uc.Execute(api.SurveyDiscardCaseInput{
 						SurveyID: options[0].Options[0].StringValue(),
@@ -148,7 +136,7 @@ var (
 				}))(s, i)
 
 			case "close":
-				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+				MustBeMainGuild(MustBeManager(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					uc := usecase.NewSurveyCloseUsecase(s, i)
 					go uc.Execute(api.SurveyCloseUsecaseInput{
 						ItemName: options[0].Options[0].StringValue(),
@@ -156,7 +144,7 @@ var (
 				}))(s, i)
 
 			case "cancel":
-				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+				MustBeMainGuild(MustBeManager(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					uc := usecase.NewSurveyCancelUsecase(s, i)
 					go uc.Execute(api.SurveyCancelUsecaseInput{
 						ItemName: options[0].Options[0].StringValue(),
@@ -168,23 +156,49 @@ var (
 				go uc.Execute(api.StartVotingUsecase{
 					UserID: i.Member.User.ID,
 					Item:   options[0].Options[0].StringValue(),
-				})
-			}
+				}, false)
 
+			case "ban":
+				uc := usecase.NewSurveyBanCase(s, i)
+				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+					go uc.Execute(api.SurveyBanInput{
+						UserID: options[0].Options[0].UserValue(s).ID,
+						Reason: options[0].Options[1].StringValue(),
+					})
+				}))(s, i)
+
+			case "unban":
+				MustBeMainGuild(MustBeMod(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+					uc := usecase.NewSurveyUnbanCase(s, i)
+					go uc.Execute(api.SurveyUnbanInput{
+						UserID: options[0].Options[0].UserValue(s).ID,
+					})
+				}))(s, i)
+			}
 		},
 	}
 )
 
 type Handler func(s *discordgo.Session, i *discordgo.InteractionCreate)
 
-func MustBeMod(next Handler) Handler {
+func MustHaveRole(role string, next Handler) Handler {
 	return func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-		if i.Member.User.ID != "" {
-			next(s, i)
-			return
+		for _, r := range i.Member.Roles {
+			if r == role {
+				next(s, i)
+				return
+			}
 		}
 		response.UnauthorizedResponse(s, i)
 	}
+}
+
+func MustBeManager(next Handler) Handler {
+	return MustHaveRole(config.MainConfig.Discord.Roles.Manager, next)
+}
+
+func MustBeMod(next Handler) Handler {
+	return MustHaveRole(config.MainConfig.Discord.Roles.Moderator, next)
 }
 
 func MustBeMainGuild(next Handler) Handler {

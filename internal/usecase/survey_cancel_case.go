@@ -31,12 +31,12 @@ func (u *SurveyCancelUsecase) Execute(input api.SurveyCancelUsecaseInput) {
 			response.ErrorResponse(err, true, u.session, u.interaction)
 			return
 		}
-		response.WithMessage("Survey cancel successfully!", u.session, u.interaction)
+		response.WithMessage("Survey cancel successfully!", true, u.session, u.interaction)
 
 		msg := embed.GetSurveyAnnounceMessage(t)
 		edit := discordgo.MessageEdit{
 			ID:         t.AnnouncementMessageID,
-			Channel:    config.MainConfig.Discord.Channels.SurveyPublicResults,
+			Channel:    config.MainConfig.Discord.Channels.SurveyAnnouncements,
 			Components: &msg.Components,
 			Embeds:     &msg.Embeds,
 		}

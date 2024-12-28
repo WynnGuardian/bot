@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -65,18 +64,15 @@ func Setup() {
 
 func MustCallAndUnwrap[T, U any](method APIMethod[T, U], in U, then func(*T), catchInternal func(error), catchAPI func(*APIResponse[T])) {
 	resp, err := method(in)
-	fmt.Println(1)
 	if err != nil {
 		catchInternal(err)
 		return
 	}
-	fmt.Println(2)
 	body, err := resp.ParseBody()
 	if err != nil {
 		catchInternal(err)
 		return
 	}
-	fmt.Println(3)
 	if !resp.Ok() {
 		catchAPI(resp)
 		return

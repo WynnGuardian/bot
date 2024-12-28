@@ -13,11 +13,14 @@ type SurveyAPI interface {
 	DefineSurveyInfo(input DefineSurveyInfoInput) (*APIResponse[any], error)
 	CloseSurvey(input SurveyCloseUsecaseInput) (*APIResponse[entity.Survey], error)
 	CancelSurvey(input SurveyCancelUsecaseInput) (*APIResponse[entity.Survey], error)
-	ApproveSurvey(input SurveyApproveCaseInput) (*APIResponse[entity.Survey], error)
+	ApproveSurvey(input SurveyApproveCaseInput) (*APIResponse[SurveyApproveResponse], error)
 	DiscardSurvey(input SurveyDiscardCaseInput) (*APIResponse[entity.Survey], error)
 	StartVoting(input StartVotingUsecase) (*APIResponse[entity.SurveyVote], error)
 	ConfirmVote(input ConfirmVoteUsecaseInput) (*APIResponse[entity.SurveyVote], error)
 	DefineVoteMessage(input DefineVoteMessageInput) (*APIResponse[any], error)
+	DenyVote(input DenyVoteInput) (*APIResponse[entity.SurveyVote], error)
+	SurveyBan(input SurveyBanInput) (*APIResponse[any], error)
+	SurveyUnban(input SurveyUnbanInput) (*APIResponse[any], error)
 }
 
 type SurveyAPIImpl struct {
@@ -67,10 +70,22 @@ func (a *SurveyAPIImpl) CancelSurvey(input SurveyCancelUsecaseInput) (*APIRespon
 	return NewCall[SurveyCancelUsecaseInput, entity.Survey](a.CallData(), "cancelSurvey", input).Post()
 }
 
-func (a *SurveyAPIImpl) ApproveSurvey(input SurveyApproveCaseInput) (*APIResponse[entity.Survey], error) {
-	return NewCall[SurveyApproveCaseInput, entity.Survey](a.CallData(), "approveSurvey", input).Post()
+func (a *SurveyAPIImpl) ApproveSurvey(input SurveyApproveCaseInput) (*APIResponse[SurveyApproveResponse], error) {
+	return NewCall[SurveyApproveCaseInput, SurveyApproveResponse](a.CallData(), "approveSurvey", input).Post()
 }
 
 func (a *SurveyAPIImpl) DiscardSurvey(input SurveyDiscardCaseInput) (*APIResponse[entity.Survey], error) {
 	return NewCall[SurveyDiscardCaseInput, entity.Survey](a.CallData(), "discardSurvey", input).Post()
+}
+
+func (a *SurveyAPIImpl) DenyVote(input DenyVoteInput) (*APIResponse[entity.SurveyVote], error) {
+	return NewCall[DenyVoteInput, entity.SurveyVote](a.CallData(), "denyVote", input).Post()
+}
+
+func (a *SurveyAPIImpl) SurveyBan(input SurveyBanInput) (*APIResponse[any], error) {
+	return NewCall[SurveyBanInput, any](a.CallData(), "banSurvey", input).Post()
+}
+
+func (a *SurveyAPIImpl) SurveyUnban(input SurveyUnbanInput) (*APIResponse[any], error) {
+	return NewCall[SurveyUnbanInput, any](a.CallData(), "unbanSurvey", input).Post()
 }

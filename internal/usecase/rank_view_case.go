@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"fmt"
 	"log"
 	"sync"
 	"victo/wynnguardian-bot/internal/domain/api"
@@ -33,7 +34,7 @@ func (u *RankViewCase) Execute(input api.RankListCaseInput, first bool) {
 
 	page := int8(1)
 	if input.MessageID != nil {
-		p, ok := surveyListPageControl.Load(*input.MessageID)
+		p, ok := rankViewPageControl.Load(*input.MessageID)
 		if !ok {
 			p = int8(1)
 		}
@@ -53,9 +54,11 @@ func (u *RankViewCase) Execute(input api.RankListCaseInput, first bool) {
 		}
 	}
 
+	fmt.Println(page, " SD")
+
 	in := api.FindRankInput{
 		ItemName: input.ItemName,
-		Limit:    limit,
+		Limit:    rankLimit,
 		Page:     int(page),
 	}
 
@@ -63,6 +66,7 @@ func (u *RankViewCase) Execute(input api.RankListCaseInput, first bool) {
 		api.GetItemAPI().GetRank,
 		in,
 		func(t *[]entity.AuthenticatedItem) {
+			fmt.Println("FASFSAF", in)
 			if input.MessageID == nil {
 
 				err := u.session.InteractionRespond(u.interaction.Interaction, &discordgo.InteractionResponse{
@@ -100,7 +104,7 @@ func (u *RankViewCase) Execute(input api.RankListCaseInput, first bool) {
 					return
 				}
 
-				surveyListPageControl.Store(msgId, int8(page))
+				rankViewPageControl.Store(msgId, int8(page))
 
 				return
 			}
@@ -109,7 +113,7 @@ func (u *RankViewCase) Execute(input api.RankListCaseInput, first bool) {
 				response.ErrorResponse(err, true, u.session, u.interaction)
 				return
 			}
-			surveyListPageControl.Store(*input.MessageID, int8(page))
+			rankViewPageControl.Store(*input.MessageID, int8(page))
 			u.session.InteractionRespond(u.interaction.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseDeferredMessageUpdate,
 			})

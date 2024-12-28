@@ -29,7 +29,7 @@ func (u *SurveyResultCase) Execute(input api.OpenSurveyInput) {
 
 		msg := embed.GetSurveyAnnounceMessage(t)
 
-		announce, err := u.session.ChannelMessageSendComplex(config.MainConfig.Discord.Channels.SurveyPublicResults, msg)
+		announce, err := u.session.ChannelMessageSendComplex(config.MainConfig.Discord.Channels.SurveyAnnouncements, msg)
 		if err != nil {
 			err = fmt.Errorf("error while creating announcement message: %s", err.Error())
 			response.ErrorResponse(err, true, u.session, u.interaction)
@@ -70,7 +70,7 @@ func (u *SurveyResultCase) Execute(input api.OpenSurveyInput) {
 				return
 			}
 
-			response.WithMessage("Survey opened successfully,", u.session, u.interaction)
+			response.WithMessage("Survey opened successfully!", true, u.session, u.interaction)
 
 		}, cerrors.CatchAndLogInternal(u.session, u.interaction), cerrors.CatchAndLogAPIError[any](u.session, u.interaction))
 

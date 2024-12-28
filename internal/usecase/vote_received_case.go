@@ -22,19 +22,20 @@ func NewVoteReceivedCase(s *discordgo.Session) *VoteReceivedCase {
 }
 
 func (u *VoteReceivedCase) Execute(input entity.SurveyVote) response.WGResponse {
-	embed := embed.GetVoteEmbed(input)
-	msg, err := util.SendVoteConfirmMessage(u.s, input.Survey.ChannelID, input.Survey.ID, input.DiscordUserID, embed)
+	message := embed.GetVoteMessage(input)
+	msg, err := u.s.ChannelMessageSendComplex(input.Survey.ChannelID, message)
+
 	if err != nil {
 		return response.ErrBadRequest
 	}
 
 	go func() {
-		time.Sleep(500)
+		time.Sleep(1000)
 		_, err = api.GetSurveyAPI().DefineVoteMessage(api.DefineVoteMessageInput{
 			SurveyID:  input.Survey.ID,
 			UserID:    input.DiscordUserID,
 			ChannelID: input.Survey.ChannelID,
-			MessageID: msg,
+			MessageID: msg.ID,
 		})
 
 		if err != nil {

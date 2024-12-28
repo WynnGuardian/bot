@@ -19,3 +19,8 @@ type CreateVoteResponse struct {
 	Token    string `json:"token"`
 	SurveyID string `json:"survey_id"`
 }
+
+type SurveyApproveResponse struct {
+	Survey entity.Survey       `json:"survey"`
+	Result entity.SurveyResult `json:"result`
+}

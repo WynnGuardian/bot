@@ -33,6 +33,7 @@ type AuthenticateItemInput struct {
 	MCOwnerUID string `json:"owner_mc_uid"`
 	DCOwnerUID string `json:"owner_dc_uid"`
 	Public     bool   `json:"public_info"`
+	Force      bool   `json:"force"`
 }
 
 type FindCriteriaInput struct {
@@ -56,8 +57,7 @@ type DefineSurveyInfoInput struct {
 
 type ConfirmVoteUsecaseInput struct {
 	Executer  string `json:"executer"`
-	UserID    string `json:"user_dc_id"`
-	Survey    string `json:"survey_id"`
+	Token     string `json:"token"`
 	MessageID string `json:"message_id"`
 	ChannelID string `json:"channel_id"`
 }
@@ -95,6 +95,10 @@ type RankUpdateCaseInput struct {
 	ItemName string `json:"item_name"`
 }
 
+type ItemTrackInput struct {
+	TrackingCode string `json:"tracking_code"`
+}
+
 type RankListCaseInput struct {
 	ItemName  string  `json:"item_name"`
 	MessageID *string `json:"message_id"`
@@ -127,4 +131,17 @@ type UpdateCriteriaInput struct {
 	ItemName   string `json:"item_name"`
 	CriteriaId string `json:"criteria_id"`
 	Value      int    `json:"value"`
+}
+
+type DenyVoteInput struct {
+	Token string `json:"token"`
+}
+
+type SurveyBanInput struct {
+	UserID string `json:"user_id"`
+	Reason string `json:"reason"`
+}
+
+type SurveyUnbanInput struct {
+	UserID string `json:"user_id"`
 }

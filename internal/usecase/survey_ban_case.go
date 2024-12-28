@@ -8,20 +8,20 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-type CreateCriteriaCase struct {
+type SurveyBanCase struct {
 	session     *discordgo.Session
 	interaction *discordgo.InteractionCreate
 }
 
-func NewCreateCriteriaCase(s *discordgo.Session, i *discordgo.InteractionCreate) *CreateCriteriaCase {
-	return &CreateCriteriaCase{
+func NewSurveyBanCase(s *discordgo.Session, i *discordgo.InteractionCreate) *SurveyBanCase {
+	return &SurveyBanCase{
 		session:     s,
 		interaction: i,
 	}
 }
 
-func (u *CreateCriteriaCase) Execute(input api.CreateCriteriaInput) {
-	api.MustCallAndUnwrap(api.GetItemAPI().CreateCriteria, input, func(t *any) {
-		response.WithMessage("Criteria created successfully!", true, u.session, u.interaction)
+func (u *SurveyBanCase) Execute(input api.SurveyBanInput) {
+	api.MustCallAndUnwrap(api.GetSurveyAPI().SurveyBan, input, func(t *any) {
+		response.WithMessage("User banned from surveys successfully!", true, u.session, u.interaction)
 	}, cerrors.CatchAndLogInternal(u.session, u.interaction), cerrors.CatchAndLogAPIError[any](u.session, u.interaction))
 }
