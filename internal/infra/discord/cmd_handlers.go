@@ -95,6 +95,12 @@ var (
 						Force:      options[0].Options[4].BoolValue(),
 					})
 				}))(s, i)
+
+			case "track":
+				uc := usecase.NewItemTrackCase(s, i)
+				go uc.Execute(api.FindItemInput{
+					TrackingCode: options[0].Options[0].StringValue(),
+				})
 			}
 		},
 

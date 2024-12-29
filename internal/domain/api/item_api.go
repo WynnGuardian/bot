@@ -16,6 +16,7 @@ type ItemsAPI interface {
 	CreateCriteria(input CreateCriteriaInput) (*APIResponse[any], error)
 	DeleteCriteria(input DeleteCriteriaInput) (*APIResponse[any], error)
 	UpdateCriteria(input UpdateCriteriaInput) (*APIResponse[any], error)
+	FindItem(input FindItemInput) (*APIResponse[entity.AuthenticatedItem], error)
 }
 
 type ItemsAPIImpl struct {
@@ -63,4 +64,8 @@ func (a *ItemsAPIImpl) GetCriteriaByName(input FindCriteriaByNameInput) (*APIRes
 
 func (a *ItemsAPIImpl) UpdateCriteria(input UpdateCriteriaInput) (*APIResponse[any], error) {
 	return NewCall[UpdateCriteriaInput, any](a.CallData(), "updateCriteria", input).Post()
+}
+
+func (a *ItemsAPIImpl) FindItem(input FindItemInput) (*APIResponse[entity.AuthenticatedItem], error) {
+	return NewCall[FindItemInput, entity.AuthenticatedItem](a.CallData(), "findItem", input).Post()
 }

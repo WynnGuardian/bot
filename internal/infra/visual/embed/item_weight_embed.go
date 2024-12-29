@@ -15,7 +15,7 @@ func GetItemWeightEmbed(resp *api.WeightResponse) *discordgo.MessageEmbed {
 	table := ""
 
 	idTitle := util.PadText("ID", textLenght)
-	valueTitle := util.PadText("Value", 5)
+	valueTitle := util.PadText("Value", 8)
 	percentTitle := util.PadText("Value %", 7)
 	criteriaTitle := util.PadText("Criteria", 8)
 	weightedTitle := util.PadText("Weighted", 8)
@@ -33,9 +33,9 @@ func GetItemWeightEmbed(resp *api.WeightResponse) *discordgo.MessageEmbed {
 			item.WynnItem.Stats[id].Maximum)
 
 		weighted := criteria * float64(norm)
-
+		sprinted := fmt.Sprintf("%d", int32(item.Stats[id]))
 		id := util.PadText(id, textLenght)
-		val := util.PadText(fmt.Sprintf("%d", item.Stats[id]), 5)
+		val := util.PadText(sprinted, 8)
 		normalized := util.PadText(fmt.Sprintf("%.2f%%", norm*100), 7)
 		criteria := util.PadText(fmt.Sprintf("%.3f", criteria), 8)
 		weight := util.PadText(fmt.Sprintf("%.1f%%", weighted*100), 8)

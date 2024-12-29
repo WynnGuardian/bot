@@ -53,9 +53,9 @@ type DiscordConfig struct {
 	Roles struct {
 		Moderator     string `json:"moderator"`
 		Manager       string `json:"manager"`
-		Surveys       string `json:"survey"`
-		Ranks         string `json:"rank"`
-		SurveyResults string `json:"survey_result"`
+		Surveys       string `json:"surveys"`
+		Ranks         string `json:"ranks"`
+		SurveyResults string `json:"survey_results"`
 	} `json:"roles"`
 	MainGuild string `json:"main_guild"`
 }

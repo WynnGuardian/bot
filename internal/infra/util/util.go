@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -8,7 +9,7 @@ func PadText(str string, length int) string {
 	if len(str) >= length {
 		return str
 	}
-	return str + strings.Repeat(" ", length-len(str))
+	return fmt.Sprintf("%s%s", str, strings.Repeat(" ", length-len(str)))
 }
 
 func Contains(str string, l []string) bool {

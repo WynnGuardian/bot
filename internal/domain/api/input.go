@@ -145,3 +145,7 @@ type SurveyBanInput struct {
 type SurveyUnbanInput struct {
 	UserID string `json:"user_id"`
 }
+
+type FindItemInput struct {
+	TrackingCode string `json:"tracking_code"`
+}

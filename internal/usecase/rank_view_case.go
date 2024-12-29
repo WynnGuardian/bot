@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"fmt"
 	"log"
 	"sync"
 	"victo/wynnguardian-bot/internal/domain/api"
@@ -54,8 +53,6 @@ func (u *RankViewCase) Execute(input api.RankListCaseInput, first bool) {
 		}
 	}
 
-	fmt.Println(page, " SD")
-
 	in := api.FindRankInput{
 		ItemName: input.ItemName,
 		Limit:    rankLimit,
@@ -66,7 +63,6 @@ func (u *RankViewCase) Execute(input api.RankListCaseInput, first bool) {
 		api.GetItemAPI().GetRank,
 		in,
 		func(t *[]entity.AuthenticatedItem) {
-			fmt.Println("FASFSAF", in)
 			if input.MessageID == nil {
 
 				err := u.session.InteractionRespond(u.interaction.Interaction, &discordgo.InteractionResponse{

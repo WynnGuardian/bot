@@ -7,6 +7,7 @@ import (
 	"victo/wynnguardian-bot/internal/infra/visual/embed"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/wynnguardian/common/entity"
 )
 
 type ItemTrackCase struct {
@@ -21,8 +22,10 @@ func NewItemTrackCase(s *discordgo.Session, i *discordgo.InteractionCreate) *Ite
 	}
 }
 
-func (u *ItemTrackCase) Execute(input api.WeightItemInput) {
-	api.MustCallAndUnwrap(api.GetItemAPI().WeightItem, input, func(t *api.WeightResponse) {
-		response.WithEmbed(embed.GetItemWeightEmbed(t), false, u.session, u.interaction)
-	}, cerrors.CatchAndLogInternal(u.session, u.interaction), cerrors.CatchAndLogAPIError[api.WeightResponse](u.session, u.interaction))
+func (u *ItemTrackCase) Execute(input api.FindItemInput) {
+	api.MustCallAndUnwrap(api.GetItemAPI().FindItem, input, func(t *entity.AuthenticatedItem) {
+		api.MustCallAndUnwrap(api.GetItemAPI().FindCriteria, api.FindCriteriaInput{ItemName: t.Item}, func(t2 *entity.ItemCriteria) {
+			response.WithEmbed(embed.GetItemTrackEmbed(t, t2), false, u.session, u.interaction)
+		}, cerrors.CatchAndLogInternal(u.session, u.interaction), cerrors.CatchAndLogAPIError[entity.ItemCriteria](u.session, u.interaction))
+	}, cerrors.CatchAndLogInternal(u.session, u.interaction), cerrors.CatchAndLogAPIError[entity.AuthenticatedItem](u.session, u.interaction))
 }
