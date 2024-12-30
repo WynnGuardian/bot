@@ -36,6 +36,8 @@ func (u *SurveyOpenUsecase) Execute(input api.OpenSurveyInput) {
 			return
 		}
 
+		fmt.Println(1)
+
 		m, err := u.session.ChannelMessageSend(config.MainConfig.Discord.Channels.VotesWaitingApproval, fmt.Sprintf("Starting new voting thread for survey %s (%s)...", t.ItemName, t.ID))
 		if err != nil {
 			err = fmt.Errorf("error while creating thread message: %s", err.Error())
@@ -43,19 +45,21 @@ func (u *SurveyOpenUsecase) Execute(input api.OpenSurveyInput) {
 			return
 		}
 
+		fmt.Println(2)
+
 		thread, err := u.session.MessageThreadStartComplex(m.ChannelID, m.ID, &discordgo.ThreadStart{
 			Name:                fmt.Sprintf("%s (%s)", t.ItemName, t.ID),
 			AutoArchiveDuration: 4320,
 			Invitable:           false,
 			RateLimitPerUser:    0,
 		})
-
+		fmt.Println(3)
 		if err != nil {
 			err = fmt.Errorf("error while creating vote thread: %s", err.Error())
 			response.ErrorResponse(err, true, u.session, u.interaction)
 			return
 		}
-
+		fmt.Println(4)
 		defineChanIn := api.DefineSurveyInfoInput{
 			Survey:            t.ID,
 			ChannelID:         thread.ID,
