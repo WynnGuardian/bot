@@ -33,7 +33,7 @@ func (u *StartVotingUsecase) Execute(input api.StartVotingUsecase, button bool) 
 	}
 
 	api.MustCallAndUnwrap(api.GetSurveyAPI().StartVoting, input, func(t *entity.SurveyVote) {
-		url := fmt.Sprintf("https://web.wynnguardian.xyz/#/vote/%s?token=%s", t.Survey.ID, t.Token)
+		url := fmt.Sprintf("https://wynnguardian.github.io/web/#/vote/%s?token=%s", t.Survey.ID, t.Token)
 		err := util.MessageUser(u.session, u.interaction.Member.User.ID, embed.GetVoteCreateMessage(url, input.Item))
 		if err != nil {
 			if !button {
